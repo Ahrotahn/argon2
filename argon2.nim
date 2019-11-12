@@ -38,10 +38,13 @@ func c_argon2_hash(
 ): cint {.header: "argon2.h", importc: "argon2_hash".}
 
 # nim functions
+#
+# return object
 type hashes* = object
   enc*: string
   raw*: seq[byte]
 
+# base function
 func argon2*(
   argon2type: string,
   pwd: string,
@@ -92,6 +95,7 @@ func argon2*(
   enclen = c_argon2_encodedlen(iterations, memory, threads, uint32(salt.len), hashlen, a2type)
   encstr = newstring(enclen)
 
+  # pass everything off to the library
   let ret = c_argon2_hash(
       iterations,
       memory,
@@ -105,7 +109,7 @@ func argon2*(
       cast[ptr char](addr encstr[0]),
       uint32(enclen),
       a2type,
-      0x13
+      0x13  # Argon2 version
   )
 
   if ret == 0:
@@ -114,3 +118,10 @@ func argon2*(
   else:
     raise newException(Exception, "Argon2 library error " & $ret)
 
+# Simplified function
+# defaults to using Argon2id, 1 iteration, 4096 KiB memory, 1 thread, 32byte hash length
+func argon2*(
+  pwd: string,
+  salt: string,
+): hashes =
+  result = argon2("id", pwd, salt, 1, 4096, 1, 32)
