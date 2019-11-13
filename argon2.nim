@@ -1,8 +1,10 @@
+from os import DirSep
+from strutils import rsplit
+
 # Build Argon2 library
 #
 # Header files
-{.passC: "-Iphc-winner-argon2/include".}
-{.passC: "-Iphc-winner-argon2/src".}
+{.passC: "-I" & currentSourcePath().rsplit(DirSep, 1)[0] & "/phc-winner-argon2/include".}
 # Source files
 {.compile: "phc-winner-argon2/src/argon2.c".}
 {.compile: "phc-winner-argon2/src/core.c".}
