@@ -84,9 +84,9 @@ func argon2*(
     raise newException(Exception, "Provided iterations must be greater than zero")
 
   if memory < 256:
-    raise newException(Exception, "Provided memory must be at least 256 KiB")
+    raise newException(Exception, "Provided memory must be at least 256 Bytes")
   if memory > uint32.high:
-    raise newException(Exception, "Provided memory exceeds 2^32 KiB")
+    raise newException(Exception, "Provided memory exceeds 2^32 Bytes")
 
   if threads < 1:
     raise newException(Exception, "Provided threads must be greater than one")
@@ -121,7 +121,7 @@ func argon2*(
     raise newException(Exception, "Argon2 library error " & $ret)
 
 # Simplified function
-# defaults to using Argon2id, 1 iteration, 4096 KiB memory, 1 thread, 32byte hash length
+# defaults to using Argon2id, 1 iteration, 4096 Bytes memory, 1 thread, 32byte hash length
 func argon2*(
   pwd: string,
   salt: string,
