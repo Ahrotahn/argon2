@@ -124,7 +124,7 @@ func argon2*(
     raise newException(Exception, "Argon2 library error " & $ret)
 
 # Simplified function
-# defaults to using Argon2id, 1 iteration, 4096 Bytes memory, 1 thread, 32byte hash length
+# defaults to using Argon2id, 1 iteration, 4096 KiB memory, 1 thread, 32 byte hash length
 func argon2*(
   pwd: string,
   salt: string,
