@@ -89,7 +89,7 @@ func argon2*(
     raise newException(Exception, "Provided memory exceeds 2^32 Bytes")
 
   if threads < 1:
-    raise newException(Exception, "Provided threads must be greater than one")
+    raise newException(Exception, "Provided thread count must be at least one")
 
   if hashlen < 4:
     raise newException(Exception, "Provided hash length must be at least four")
