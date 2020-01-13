@@ -83,10 +83,8 @@ func argon2*(
   if iterations < 1:
     raise newException(Exception, "Provided iterations must be greater than zero")
 
-  if memory < 256:
-    raise newException(Exception, "Provided memory must be at least 256 Bytes")
-  if memory > uint32.high:
-    raise newException(Exception, "Provided memory exceeds 2^32 Bytes")
+  if memory < 8:
+    raise newException(Exception, "Provided memory cost must be at least 8 KiB")
 
   if threads < 1:
     raise newException(Exception, "Provided thread count must be at least one")
