@@ -83,19 +83,22 @@ func argon2*(
   if iterations < 1:
     raise newException(Exception, "Provided iterations must be greater than zero")
 
-  if memory < 256:
-    raise newException(Exception, "Provided memory must be at least 256 Bytes")
-  if memory > uint32.high:
-    raise newException(Exception, "Provided memory exceeds 2^32 Bytes")
+  if memory < 8:
+    raise newException(Exception, "Provided memory cost must be at least 8 KiB")
 
   if threads < 1:
-    raise newException(Exception, "Provided threads must be greater than one")
+    raise newException(Exception, "Provided thread count must be at least one")
 
   if hashlen < 4:
     raise newException(Exception, "Provided hash length must be at least four")
 
   enclen = c_argon2_encodedlen(iterations, memory, threads, uint32(salt.len), hashlen, a2type)
-  encstr = newstring(enclen)
+  # for "safety" give capacity reported from encodedlen
+  encstr = newStringOfCap(enclen)
+  # discount NULL byte accounted for in encodedlen
+  encstr.setLen(enclen - 1)
+  # don't copy on assignment for performance
+  encstr.shallow
 
   # pass everything off to the library
   let ret = c_argon2_hash(
@@ -121,7 +124,7 @@ func argon2*(
     raise newException(Exception, "Argon2 library error " & $ret)
 
 # Simplified function
-# defaults to using Argon2id, 1 iteration, 4096 Bytes memory, 1 thread, 32byte hash length
+# defaults to using Argon2id, 1 iteration, 4096 KiB memory, 1 thread, 32 byte hash length
 func argon2*(
   pwd: string,
   salt: string,
