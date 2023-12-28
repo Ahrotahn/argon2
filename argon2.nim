@@ -97,8 +97,6 @@ func argon2*(
   encstr = newStringOfCap(enclen)
   # discount NULL byte accounted for in encodedlen
   encstr.setLen(enclen - 1)
-  # don't copy on assignment for performance
-  encstr.shallow
 
   # pass everything off to the library
   let ret = c_argon2_hash(
